@@ -58,27 +58,11 @@ RECEIVED → CANCELED
 
 ## Test Plan
 
-### TC-01a: Menu Items Are Displayed
+### TC-01: Menu Loading
 - **Scenario**: Page loads and menu is populated from the API
 - **Steps**: Open the homepage
-- **Expected**: All pizza items rendered; each item has the correct name visible in the list
-- **Test**: `all menu items are displayed`
-
----
-
-### TC-01b: Each Pizza Shows Name, Description and Image
-- **Scenario**: Each menu item renders its full details
-- **Steps**: Open the homepage; inspect each item
-- **Expected**: Each pizza shows correct name, description text, and a visible image
-- **Test**: `each pizza shows name, description and image`
-
----
-
-### TC-01c: Default Quantity for Every Pizza Is 0
-- **Scenario**: Quantity controls start at zero on page load
-- **Steps**: Open the homepage; check quantity display for every item
-- **Expected**: All quantity displays show `0`
-- **Test**: `default quantity for every pizza is 0`
+- **Expected**: 5 pizza items rendered with name, description, image, and quantity controls
+- **Also verify**: Quantity controls start at 0 for all items
 
 ---
 
@@ -227,7 +211,7 @@ RECEIVED → CANCELED
 | Priority | Test Cases |
 |----------|------------|
 | Critical | TC-07, TC-09, TC-12, TC-13, TC-14 |
-| High     | TC-01a, TC-01b, TC-01c, TC-02, TC-05, TC-06, TC-10 |
+| High     | TC-01, TC-02, TC-05, TC-06, TC-10 |
 | Medium   | TC-03, TC-04, TC-08, TC-11, TC-15 |
 | Low      | TC-16, TC-17, TC-18, TC-19, TC-20 |
 
@@ -236,35 +220,18 @@ RECEIVED → CANCELED
 ## File Plan
 
 ```
-awesome-pizza-test-copilot/
-├── fixtures/
-│   └── test.ts                    ✅ Custom Playwright fixtures (pageManager injection)
-│
-├── page-objects/
-│   ├── menuPage.ts                ✅ TC-01a, TC-01b, TC-01c, TC-02, TC-03, TC-04: menu items, quantity controls
-│   └── orderPage.ts               🔲 TC-05–TC-14: order placement, lookup, status
-│
-├── page-manager/
-│   └── pageManager.ts             ✅ Central PageManager class
-│
-├── tests/
-│   ├── menu.spec.ts               ✅ TC-01a, TC-01b, TC-01c: menu loading, item details, quantity controls
-│   ├── order-placement.spec.ts    🔲 TC-05, TC-06, TC-07, TC-08: button state, happy path, multi-item
-│   ├── order-lookup.spec.ts       🔲 TC-09, TC-10, TC-11: valid/invalid lookup, Enter key
-│   ├── order-status.spec.ts       🔲 TC-12, TC-13, TC-14: RECEIVED→DELIVERING→DELIVERED, CANCELED
-│   ├── notifications.spec.ts      🔲 TC-15: auto-dismiss, success/error appearance
-│   ├── theme.spec.ts              🔲 TC-16, TC-17, TC-18: toggle, persistence across reload
-│   └── api.spec.ts                🔲 TC-19, TC-20: direct API validation (no UI)
-│
-├── playwright.config.ts
-├── package.json
-└── tsconfig.json
+tests/
+├── menu.spec.ts              # TC-01: menu loading, item display, quantity controls
+├── cart.spec.ts              # TC-02, TC-03, TC-04: adding, reducing, removing items
+├── order-placement.spec.ts   # TC-05, TC-06, TC-07, TC-08: button state, happy path, multi-item
+├── order-lookup.spec.ts      # TC-09, TC-10, TC-11: valid/invalid lookup, Enter key
+├── order-status.spec.ts      # TC-12, TC-13, TC-14: RECEIVED→DELIVERING→DELIVERED, CANCELED
+├── notifications.spec.ts     # TC-15: auto-dismiss, success/error appearance
+├── theme.spec.ts             # TC-16, TC-17, TC-18: toggle, persistence across reload
+└── api.spec.ts               # TC-19, TC-20: direct API validation (no UI)
 ```
 
 **Notes:**
-- All spec files import `{ test, expect }` from `../fixtures/test` — not directly from `@playwright/test`
-- `pageManager` is automatically injected into every test via the fixture — no manual setup needed
-- `api.spec.ts` uses Playwright's `request` fixture directly, no browser or pageManager needed
-- Spec files map 1:1 to feature areas, allowing targeted runs (e.g. `npx playwright test menu`)
+- `api.spec.ts` — uses Playwright's `request` fixture directly, no browser needed
+- Spec files map 1:1 to feature areas, allowing targeted runs (e.g. `npx playwright test cart`)
 - `example.spec.ts` can be deleted — it points at playwright.dev and is not relevant to this project
-- Test data (pizza names, descriptions) is fetched from `/api/daily-menu` in `beforeAll` — no hardcoded values in specs

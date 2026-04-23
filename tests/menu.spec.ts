@@ -39,6 +39,7 @@ test.describe("Menu", () => {
       await expect(menu.getImage(pizza.name)).toBeVisible();
     }
   });
+  
   test("default quantity for every pizza is 0", async ({ pageManager }) => {
     const menu = pageManager.onMenuPage();
     for (const pizza of PIZZAS) {
